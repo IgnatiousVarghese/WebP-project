@@ -1,0 +1,122 @@
+/* body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+} */
+
+a {
+  color: #00B7FF;
+}
+
+body {
+  /* background-color: gray; */
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background-color: yellow;
+}
+
+nav>ul {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin: 0px;
+  padding: 0px;
+}
+
+nav>ul>li,
+nav>div {
+  list-style: none;
+  margin: 10px;
+}
+
+nav>ul>li>a {
+  text-decoration: none;
+}
+
+#head {
+  text-align: center;
+}
+
+.center {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20vh;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+.container {
+  border: 1px solid black;
+  width: 30%;
+  padding: 20px;
+  padding-bottom: 40px;
+  min-width: 300px;
+  position: relative;
+}
+
+.input {
+  padding: 10px;
+  margin-left: 20%;
+}
+
+h3 {
+  text-align: center;
+}
+
+.login {
+  position: absolute;
+  margin: 10px;
+  margin-right: 10%;
+  right: 0;
+  bottom: 0;
+}
+
+.rad-input {
+  display: none;
+}
+
+.rad-input:checked+.container2 {
+  box-shadow: 0px 0px 5px 5px rgba(100, 255, 100, 1);
+}
+
+.rad-input:checked~.container2>img {
+  box-shadow: 0px 0px 5px 5px rgba(100, 255, 100, 1);
+}
+
+.container2 {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+img {
+  width: 25px;
+  height: 25px;
+  margin: 0px;
+}
+
+.desc {
+  font-size: 0.8rem;
+}
+
+.title {
+  font-size: 1.5rem;
+}
+
+.center2 {
+  text-align: center;
+}

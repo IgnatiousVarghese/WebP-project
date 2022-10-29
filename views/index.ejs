@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMS-Home</title>
+    <link rel="stylesheet" href="stylesheets/style.css">
+</head>
+
+<body class="flex">
+    <header>
+        <nav>
+            <div id="logo">
+                <img src="images/nitc.png" alt="">
+            </div>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <% if(session.user_type) { %>
+                <li>
+                    <a href="/logout" class="btn btn-primary">Logout</a>
+                </li>
+
+
+                <% } else { %>
+                    <li><a href="/login">Log in</a></li>
+                <% } %>
+            </ul>
+        </nav>
+        <h1 id="head">Election Management System</h1>
+    </header>
+    <main>
+        <div class="center">
+            <h2>Election starts on 12th October and ends on 14th October</h2>
+        </div>
+    </main>
+</body>
+
+</html>
