@@ -25,11 +25,7 @@ router.get('/', async function (req, res, next) {
         res.redirect('/voter')
     }
     else if (user_data['user_type'] === 'EC') {
-        res.render('./ec/home', { 
-            title: 'Express', 
-            session: req.session, 
-            election: election
-        });
+        res.redirect('/ec')
     }
     else
         res.redirect('/logout');

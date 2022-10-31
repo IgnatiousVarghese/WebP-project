@@ -11,60 +11,70 @@ router.get('/', async function (req, res, next) {
     console.log("rendering voter home")
     var election = await utils.getElectionDetails();
 
-    userData = auth.getUserData(req, res);
-    console.log('user data - ', userData);
+    if (election.isElectionOngoing === false) {
+        console.log("Election Not Sarted")
+        res.render('election_not_started', {
+            title: 'Express',
+            session: req.session,
+            election: election,
+        });
+    }
+    else {
+        userData = auth.getUserData(req, res);
+        console.log('user data - ', userData);
 
-    // check if user is voter
-    if (auth.isVoter(req, res)) {
-        var posts = await utils.getPosts();
+        // check if user is voter
+        if (auth.isVoter(req, res)) {
+            var posts = await utils.getPosts();
 
-        // check if postId parameter is present
-        if (req.query.postId !== undefined) {
-            var postId = req.query.postId;
-            var post
-            for (var i = 0; i < posts.length; i++) {
-                if (Number(postId) === Number(posts[i].Id)) {
-                    post = posts[i];
-                    break;
+            // check if postId parameter is present
+            if (req.query.postId !== undefined) {
+                var postId = req.query.postId;
+                var post
+                for (var i = 0; i < posts.length; i++) {
+                    if (Number(postId) === Number(posts[i].Id)) {
+                        post = posts[i];
+                        break;
+                    }
+                }
+
+                //check if voter already voted for this post 
+                if (await utils.notVoted(userData['user_name'], postId)) {
+                    var candidates = await utils.getCandidatesByPostId(postId);
+                    console.log('post' + post)
+                    console.log('candidates' + candidates)
+                    res.render('./voter/view_candidate', {
+                        title: 'Express',
+                        session: req.session,
+                        hasVoted: false,
+                        election: election,
+                        post: post,
+                        candidates: candidates,
+                    });
+                }
+                else {
+                    res.render('./voter/vote_done', {
+                        title: 'Express',
+                        session: req.session,
+                        hasVoted: true,
+                        election: election,
+                        post: post,
+                    });
                 }
             }
 
-            //check if voter already voted for this post 
-            if (await utils.notVoted(userData['user_name'], postId)) {
-                var candidates = await utils.getCandidatesByPostId(postId);
-                console.log('post' + post)
-                console.log('candidates' + candidates)
-                res.render('./voter/view_candidate', {
+            else {
+                res.render('./voter/home', {
                     title: 'Express',
                     session: req.session,
-                    hasVoted: false,
                     election: election,
-                    post: post,
-                    candidates: candidates,
-                });
-            }
-            else{
-                res.render('./voter/vote_done', {
-                    title: 'Express',
-                    session: req.session,
-                    hasVoted: true,
-                    election: election,
-                    post: post,
+                    posts: posts,
                 });
             }
         }
-
         else {
-            res.render('./voter/home', {
-                title: 'Express',
-                session: req.session,
-                election: election,
-                posts: posts,
-            });
+            res.redirect('../')
         }
-    }
-    else {
-        res.redirect('../')
     }
 })
 
@@ -76,29 +86,39 @@ router.post('/', (req, res, next) => {
 router.post('/vote', async function (req, res, next) {
     console.log("POST req for Voting")
     console.log(req.body)
+    var election = await utils.getElectionDetails();
 
-    if (auth.isVoter(req, res) === false ||
+    if (election.isElectionOngoing === false) {
+        res.render('election_not_started', {
+            title: 'Express',
+            session: req.session,
+            election: election,
+        });
+    }
+    else if (auth.isVoter(req, res) === false ||
         req.body.postId === undefined || req.body.candidateId === undefined) {
         res.redirect('/');
     }
 
-    const postId = req.body.postId
-    const candidateRollno = req.body.candidateId
-    const voterRollno = auth.getUserData(req, res)['user_name']
-
-    console.log(candidateRollno, postId, voterRollno)
-
-    if (await utils.notVoted(voterRollno, postId)) {
-        console.log("not voted")
-
-        var result = await utils.Vote(voterRollno, postId, candidateRollno)
-        console.log(result)
-        res.redirect('/voter/?postId=' + postId)
-
-    }
     else {
-        console.log("ALREADY voted")
-        res.redirect('/voter')
+        const postId = req.body.postId
+        const candidateRollno = req.body.candidateId
+        const voterRollno = auth.getUserData(req, res)['user_name']
+
+        console.log(candidateRollno, postId, voterRollno)
+
+        if (await utils.notVoted(voterRollno, postId)) {
+            console.log("not voted")
+
+            var result = await utils.Vote(voterRollno, postId, candidateRollno)
+            console.log(result)
+            res.redirect('/voter/?postId=' + postId)
+
+        }
+        else {
+            console.log("ALREADY voted")
+            res.redirect('/voter')
+        }
     }
 
 

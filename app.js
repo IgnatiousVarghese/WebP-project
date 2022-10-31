@@ -13,7 +13,7 @@ var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');
 var usersRouter = require('./routes/users');
 var voterRouter = require('./routes/voter/home');
-// var ecRouter = require('./routes/ec/home');
+var ecRouter = require('./routes/ec/home');
 
 var app = express();
 
@@ -48,7 +48,7 @@ app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 app.use('/users', usersRouter);
 app.use('/voter', voterRouter);
-// app.use('/ec', ecRouter);
+app.use('/ec', ecRouter);
 
 
 

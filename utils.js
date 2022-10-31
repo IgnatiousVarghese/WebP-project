@@ -17,11 +17,19 @@ module.exports = {
         var query = `SELECT * FROM election limit 1;`
         var result = await excequteAsyncQuery(query)
         result = JSON.parse(JSON.stringify(result))[0]
+        var Start_time = new Date(result.Start_time)
+        var End_time = new Date(result.End_time)
+        var time_now = new Date()
+
+        var isElectionOngoing = time_now > Start_time && time_now < End_time
+
+
         const electionDetails = {
             Election_id: result.Election_id,
-            Start_time: new Date(result.Start_time),
-            End_time: new Date(result.End_time),
-            Votes_counted: result.Votes_counted
+            Start_time: Start_time,
+            End_time: End_time,
+            Votes_counted: result.Votes_counted,
+            isElectionOngoing: isElectionOngoing,
         }
         return electionDetails;
     },

@@ -16,6 +16,13 @@ module.exports = {
         return false;
     },
 
+    isEc: function (req, res) {
+        if (req.session.user_type && req.session.user_type === 'EC')
+            return true;
+            //can be verified with DB too  
+        return false;
+    },
+
     getUserData: function (req, res) {
         if (req.session.user_type === undefined)
             return null;
