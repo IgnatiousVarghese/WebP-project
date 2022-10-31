@@ -16,15 +16,15 @@
                 <img src="images/nitc.png" alt="">
             </div>
             <ul>
-                <li><a href="/">Home ffor logged in ones</a></li>
+                <li><a href="/">Home</a></li>
                 <% if(session.user_type) { %>
-                <li>
-                    <a href="/logout" class="btn btn-primary">Logout</a>
-                </li>
-
-
+                    <li>
+                        <a href="/logout" class="btn btn-primary">Logout</a>
+                    </li>
                 <% } else { %>
-                    <li><a href="/login">Log in</a></li>
+                    <li>
+                        <a href="/login">Log in</a>
+                    </li>
                 <% } %>
             </ul>
         </nav>
@@ -32,7 +32,21 @@
     </header>
     <main>
         <div class="center">
-            <h2>Election starts on 12th October and ends on 14th October</h2>
+            <h3 style="font-size: 2rem">Choose the post you wish to vote for!</h3>
+        </div>
+        <div style="text-align: center; margin-top:20px">
+            <form action="/voter" method="post">
+                <select name="post" id="post">
+                    <% 
+                        for (var i = 0; i< posts.length; i++){
+                            %>
+                            <option value="<%=posts[i].Id %>"><%=posts[i].Name %></option>
+                            <%
+                        }    
+                    %>
+                </select>
+                <button type="submit">submit</button>
+            </form>
         </div>
     </main>
 </body>

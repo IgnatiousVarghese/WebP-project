@@ -9,6 +9,13 @@ module.exports = {
         }
     },
 
+    isVoter: function (req, res) {
+        if (req.session.user_type && req.session.user_type === 'Voter')
+            return true;
+            //can be verified with DB too  
+        return false;
+    },
+
     getUserData: function (req, res) {
         if (req.session.user_type === undefined)
             return null;

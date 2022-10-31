@@ -40,12 +40,12 @@ CREATE TABLE `CANDIDATE` (
 	PRIMARY KEY (`Rollno`)
 );
 
-CREATE TABLE `VOTE` (
-	`Vote_id` INT NOT NULL AUTO_INCREMENT,
-	`Post_id` INT NOT NULL,
-	`Candidate_id` VARCHAR(255) NOT NULL,
-	`Cast_time` DATETIME NOT NULL,
-	PRIMARY KEY (`Vote_id`)
+CREATE TABLE `vote` (
+  `Voter_id` varchar(255) NOT NULL,
+  `Post_id` int NOT NULL,
+  `Candidate_id` varchar(255) NOT NULL,
+  `Cast_time` datetime NOT NULL,
+  PRIMARY KEY (`Voter_id`,`Post_id`)
 );
 
 CREATE TABLE `ELECTION` (
@@ -72,4 +72,8 @@ ALTER TABLE `CANDIDATE` ADD CONSTRAINT `CANDIDATE_fk1` FOREIGN KEY (`Post_id`) R
 ALTER TABLE `VOTE` ADD CONSTRAINT `VOTE_fk0` FOREIGN KEY (`Post_id`) REFERENCES `POST`(`Id`);
 
 ALTER TABLE `VOTE` ADD CONSTRAINT `VOTE_fk1` FOREIGN KEY (`Candidate_id`) REFERENCES `CANDIDATE`(`Rollno`);
+
+ALTER TABLE `test`.`candidate` 
+ADD COLUMN `photo` VARCHAR(255) NULL DEFAULT 'images\\candidates\\candidate1.png' AFTER `Manifesto`;
+
 ```

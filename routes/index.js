@@ -22,11 +22,7 @@ router.get('/', async function (req, res, next) {
         });
     }
     else if (user_data['user_type'] === 'Voter') {
-        res.render('./voter/home', { 
-            title: 'Express', 
-            session: req.session, 
-            election: election
-        });
+        res.redirect('/voter')
     }
     else if (user_data['user_type'] === 'EC') {
         res.render('./ec/home', { 
