@@ -32,7 +32,11 @@
     </header>
     <main>
         <div class="center">
-            <h2>Election starts on 12th October and ends on 14th October</h2>
+            <h2>Election starts on 
+                <%= election.Start_time.toLocaleString()  %> 
+                and ends on 
+                <%= election.End_time.toLocaleString()  %> 
+            </h2>
         </div>
     </main>
 </body>
