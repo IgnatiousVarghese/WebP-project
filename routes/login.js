@@ -2,10 +2,16 @@ var express = require('express');
 var router = express.Router();
 
 var database = require('../database');
+var auth = require('../auth');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    res.render('login', { title: 'Express', session: req.session });
+    if (auth.isLoggedIn(req, res)) {
+        res.redirect('../')
+    }
+    else {
+        res.render('login', { title: 'Express', session: req.session });
+    }
 });
 
 router.post('/', function (request, response, next) {

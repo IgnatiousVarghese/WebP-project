@@ -31,5 +31,23 @@ router.get('/', async function (req, res, next) {
         res.redirect('/logout');
 });
 
+router.post('/test', (req, res, next) => {
+    
+    const form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+        console.log(files)
+  
+        var oldPath = files.profilePic.path;
+        var newPath = path.join(__dirname, 'uploads')
+                + '/'+files.profilePic.name
+        var rawData = fs.readFileSync(oldPath)
+      
+        fs.writeFile(newPath, rawData, function(err){
+            if(err) console.log(err)
+            return res.send("Successfully uploaded")
+        })
+  })
+});
+
 module.exports = router;
 

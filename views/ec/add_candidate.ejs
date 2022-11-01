@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMS-Home</title>
+    <link rel="stylesheet" href="//localhost:3000/stylesheets/style.css">
+</head>
+
+<body class="flex">
+    <header>
+        <nav>
+            <div id="logo">
+                <img src="//localhost:3000/images/nitc.png" alt="">
+            </div>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <% if(session.user_type) { %>
+                    <li>
+                        <a href="/logout" class="btn btn-primary">Logout</a>
+                    </li>
+
+
+                    <% } else { %>
+                        <li><a href="/login">Log in</a></li>
+                        <% } %>
+            </ul>
+        </nav>
+        <h1 id="head">Election Management System</h1>
+    </header>
+    <main>
+        <div class="center">
+            <h2>EC ADD Candidate</h2>
+            <p><%=JSON.stringify(session) %></p>
+        </div>
+        <div class="center">
+            <form action="/ec/add_candidate" method="get">
+                <input type="text" name="Rollno" id="Rollno" value="<%=rollno%>">
+                <button type="submit">Check</button>
+            </form>
+
+            <form id="add_candidate_form" action="/ec/add_candidate" method="post">
+                <label for="rollnopost">Rollno</label>
+                <input type="text" name="rollno" id="rollnopost">
+
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name">
+
+                <label for="manifesto">Manifesto</label>
+                <input type="text" name="manifesto" id="manifesto">
+
+                <label for="posts">posts</label>
+                <select name="postId" id="posts">
+                    <!--
+                        make options using javascript
+                    -->
+                    <option value="1" id = "">Cul affairs sec</option>
+                    <option value="2" id = "">Gen sec</option>
+                    <option value="3" id = "">sports sec</option>
+                </select>
+
+                <label for="photo">Photo</label>
+                <input type="file" name="photo" id="photo">
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </main>
+    <script>
+        <% if(rollno === undefined) { %>
+            document.getElementById('add_candidate_form').remove()
+        <% } else { %>
+            rollno = JSON.parse('<%- JSON.stringify(rollno) %>');
+            voter = JSON.parse('<%- JSON.stringify(voter) %>');
+            posts = JSON.parse('<%- JSON.stringify(posts) %>');
+            document.getElementById('rollnopost').value = voter.Rollno
+            document.getElementById('name').value = voter.Name
+        <%}%>
+    </script>
+</body>
+
+</html>

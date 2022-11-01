@@ -11,12 +11,18 @@ router.get('/', async function (req, res, next) {
     console.log("rendering voter home")
     var election = await utils.getElectionDetails();
 
-    if (election.isElectionOngoing === false) {
+    if (election.isElectionNotStarted) {
         console.log("Election Not Sarted")
-        res.render('election_not_started', {
+        res.render('message', {
             title: 'Express',
             session: req.session,
             election: election,
+            messages: [
+                {
+                    type : 'info',
+                    text : 'Election NOT YET STARTED',
+                }
+            ],
         });
     }
     else {
@@ -89,7 +95,7 @@ router.post('/vote', async function (req, res, next) {
     var election = await utils.getElectionDetails();
 
     if (election.isElectionOngoing === false) {
-        res.render('election_not_started', {
+        res.render('message', {
             title: 'Express',
             session: req.session,
             election: election,
