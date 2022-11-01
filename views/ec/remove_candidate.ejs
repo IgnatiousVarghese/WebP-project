@@ -32,60 +32,54 @@
     </header>
     <main>
         <div class="center">
-            <h2>EC ADD Candidate</h2>
-            <p><%=JSON.stringify(session) %></p>
+            <h2>EC REMOVE Candidate</h2>
             <p>
-                <% if(messages) { %> 
+                <%=JSON.stringify(session) %>
+            </p>
+            <p>
+                <% if(messages) { %>
                     <script>
                         var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
                     </script>
-                    <%= JSON.stringify(messages) %> 
-                    <% } %> 
+                    <%= JSON.stringify(messages) %>
+                        <%= JSON.stringify(candidate) %>
+                            <% } %>
             </p>
         </div>
         <div class="center">
-            <form action="/ec/add_candidate" method="get">
+            <form id="form" action="/ec/remove_candidate" method="get">
                 <input type="text" name="Rollno" id="Rollno" value="<%=rollno%>">
                 <button type="submit">Check</button>
             </form>
 
-            <form id="add_candidate_form" action="/ec/add_candidate" method="post">
+            <form id="remove_candidate_form" action="/ec/remove_candidate" method="post">
                 <label for="rollnopost">Rollno</label>
-                <input type="text" name="rollno" id="rollnopost">
+                <input type="text" name="rollno" id="rollno">
 
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name">
 
-                <label for="manifesto">Manifesto</label>
-                <input type="text" name="manifesto" id="manifesto">
-
-                <label for="posts">posts</label>
-                <select name="postId" id="posts">
-                    <!--
-                        make options using javascript
-                    -->
-                    <option value="1" id = "">Cul affairs sec</option>
-                    <option value="2" id = "">Gen sec</option>
-                    <option value="3" id = "">sports sec</option>
-                </select>
-
-                <label for="photo">Photo</label>
-                <input type="file" name="photo" id="photo">
-
-                <button type="submit">Submit</button>
+                <button type="submit">Remove</button>
             </form>
         </div>
     </main>
     <script>
-        <% if(voter === undefined) { %>
-            document.getElementById('add_candidate_form').remove()
-        <% } else { %>
-            rollno = JSON.parse('<%- JSON.stringify(rollno) %>');
-            voter = JSON.parse('<%- JSON.stringify(voter) %>');
-            posts = JSON.parse('<%- JSON.stringify(posts) %>');
-            document.getElementById('rollnopost').value = voter.Rollno
-            document.getElementById('name').value = voter.Name
-        <%}%>
+        var rollno
+        try {
+            rollno = JSON.parse('<%- JSON.stringify(rollno) %>')
+        }
+        catch (e) {
+            rollno = undefined
+            console.log(e.message)
+        }
+        var candidate = JSON.parse('<%- JSON.stringify(candidate) %>');
+        if (candidate.length > 0) {
+            document.getElementById('rollno').value = candidate[0].Rollno
+            document.getElementById('name').value = candidate[0].Name
+        }
+        else {
+            document.getElementById('remove_candidate_form').remove()
+        }
     </script>
 </body>
 

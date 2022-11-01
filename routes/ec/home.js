@@ -51,6 +51,7 @@ router.get('/add_candidate', async (req, res, next) => {
             voter = await utils.getVoter(rollno);
             if (voter.length > 0) {
                 if (await utils.isVoterCandidate(rollno)) {
+                    voter = undefined
                     messages.push({
                         type: 'info',
                         text: 'Voter already a Candidate'
@@ -67,6 +68,7 @@ router.get('/add_candidate', async (req, res, next) => {
                     text: 'Voter rollno invalid'
                 })
                 rollno = undefined
+                voter = undefined
             }
         }
         res.render('./ec/add_candidate', {
@@ -90,19 +92,15 @@ router.post('/add_candidate', async function (req, res) {
     var election = await utils.getElectionDetails();
     if (election.isElectionNotStarted && auth.isEc(req, res)) {
         var rollno
+        // console.log('rollno-',req.body.rollno, 'name-', req.body.name, 'manifesto-', req.body.manifesto)
         if (req.body.rollno === undefined || req.body.manifesto === undefined ||
             req.body.name === undefined || req.body.photo === undefined) {
-            res.render('message', {
-                title: 'Express',
-                session: req.session,
-                election: election,
-                messages: [
-                    {
-                        type: 'info',
-                        text: 'Form not completed'
-                    }
-                ]
-            });
+            messages.push(
+                {
+                    type: 'error',
+                    text: 'Form not completed'
+                }
+            )
         }
         else {
             rollno = req.body.rollno
@@ -111,7 +109,6 @@ router.post('/add_candidate', async function (req, res) {
                     type: 'info',
                     text: 'Voter already a Candidate'
                 })
-                res.redirect('add_candidate')
             }
             else {
                 const uploadFolder = path.join(__dirname, "..", "..", "public", "images", "candidates");
@@ -127,14 +124,104 @@ router.post('/add_candidate', async function (req, res) {
                 manifesto = req.body.manifesto
                 try {
                     await utils.addCandidate(rollno, postId, manifesto, "images\\\\candidates\\\\" + fileName)
+                    messages.push({
+                        type: 'success',
+                        text: 'Voter made candidate successfully',
+                    })
                 }
                 catch (err) {
-                    console.log(err)
+                    messages.push({
+                        type: 'error',
+                        text: err.message,
+                    })
                 }
             }
-
-
         }
+        res.redirect('add_candidate')
+    }
+
+    else {
+        res.redirect('../')
+    }
+})
+
+router.get('/remove_candidate', async (req, res, next) => {
+    var election = await utils.getElectionDetails();
+    var rollno = req.query.Rollno
+    var voter = {}
+    var candidate = {}
+    if (election.isElectionNotStarted && auth.isEc(req, res)) {
+        if (rollno !== undefined) {
+            voter = await utils.getVoter(rollno);
+            if (voter.length > 0) {
+                if (await utils.isVoterCandidate(rollno)) {
+                    candidate = await utils.getCandidatesInfo(rollno)
+                    messages.push({
+                        type: 'info',
+                        text: 'Voter already a Candidate'
+                    })
+                }
+                else {
+                    messages.push({
+                        type: 'error',
+                        text: 'Voter NOT a Candidate'
+                    })
+                }
+            }
+            else {
+                messages.push({
+                    type: 'info',
+                    text: 'Voter rollno invalid'
+                })
+            }
+        }
+        res.render('./ec/remove_candidate', {
+            title: 'Express',
+            session: req.session,
+            election: election,
+            rollno: rollno,
+            candidate: candidate,
+            messages: messages
+        })
+        messages = []
+    }
+    else {
+        res.redirect('../')
+    }
+})
+
+router.post('/remove_candidate', async function (req, res) {
+    console.log('Removing Candidate')
+    var election = await utils.getElectionDetails();
+    if (election.isElectionNotStarted && auth.isEc(req, res)) {
+        var rollno
+        // console.log('rollno-',req.body.rollno)
+        if (req.body.rollno === undefined) {
+            messages.push(
+                {
+                    type: 'error',
+                    text: 'Form not completed'
+                }
+            )
+        }
+        else {
+            rollno = req.body.rollno
+            try {
+                //error if vote exists for that candidate
+                await utils.removeCandidate(rollno)
+                messages.push({
+                    type: 'success',
+                    text: 'Candidate REMOVED successfully',
+                })
+            }
+            catch (err) {
+                messages.push({
+                    type: 'error',
+                    text: err.message,
+                })
+            }
+        }
+        res.redirect('remove_candidate')
     }
 
     else {

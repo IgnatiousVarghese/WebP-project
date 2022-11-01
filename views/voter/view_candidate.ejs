@@ -36,6 +36,14 @@
         </h2>
         <h4 class="center2">
             <%= post.Desc %>
+            <p>
+                <% if(messages) { %>
+                    <script>
+                        var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
+                    </script>
+                    <%= JSON.stringify(messages) %>
+                            <% } %>
+            </p>
         </h4>
         <form action="/voter/vote" method="post">
             <div class="center">
@@ -49,7 +57,7 @@
                         value = "<%=candidates[i].Rollno%>" class="rad-input">
 
                         <div class="container2">
-                            <img id="candidatepic" src="/<%=candidates[i].photo%>" alt="">
+                            <img id="candidatepic" src="/<%=candidates[i].Photo%>" alt="">
                             <div class="title">
                                 <%=candidates[i].Name%>
                             </div>

@@ -53,10 +53,27 @@ module.exports = {
         return result;
     },
 
-    addCandidate :async function (rollno, postId, manifesto, photo) {
+    getCandidatesInfo: async function (rollno) {
+        var query = `SELECT c.Rollno, v.Name, p.name as Post_name
+                FROM ((candidate c INNER JOIN voter v ON c.Rollno = v.Rollno )
+                INNER JOIN post p ON c.post_id = p.id)
+                where c.rollno = '${rollno}';`
+        var result = await excequteAsyncQuery(query)
+        result = JSON.parse(JSON.stringify(result))
+        console.log(JSON.stringify(result))
+        return result;
+    },
+
+    addCandidate: async function (rollno, postId, manifesto, photo) {
         console.log(photo)
         var query = `INSERT INTO candidate values ('${rollno}', '${postId}', '${manifesto}', '${photo}');`
         return await excequteAsyncQuery(query)
+    },
+
+    removeCandidate: async function (rollno) {
+        var query = `DELETE FROM candidate WHERE rollno = '${rollno}';`
+        var result = await excequteAsyncQuery(query)
+        return JSON.parse(JSON.stringify(result))
     },
 
     isVoterCandidate: async function (rollno) {
@@ -93,12 +110,8 @@ module.exports = {
                 (select rollno from candidate where Rollno = '${candidateRollno}'), 
                 now()
                 );`
-        try {
-            var result = await excequteAsyncQuery(query)
-        }
-        catch (err) {
-            return JSON.parse(JSON.stringify(err.sqlMessage));
-        }
+
+        var result = await excequteAsyncQuery(query)
         return JSON.parse(JSON.stringify(result))
     },
 
