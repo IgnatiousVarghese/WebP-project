@@ -34,6 +34,14 @@
         <div class="center">
             <h2>EC ADD Candidate</h2>
             <p><%=JSON.stringify(session) %></p>
+            <p>
+                <% if(messages) { %> 
+                    <script>
+                        var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
+                    </script>
+                    <%= JSON.stringify(messages) %> 
+                    <% } %> 
+            </p>
         </div>
         <div class="center">
             <form action="/ec/add_candidate" method="get">

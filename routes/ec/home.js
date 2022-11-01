@@ -8,6 +8,7 @@ const utils = require('../../utils');
 
 var database = require('../../database');
 var userData
+var messages = []
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
@@ -19,36 +20,25 @@ router.get('/', async function (req, res, next) {
 
     // check if election ongoing
     if (election.isElectionOngoing) {
-        res.render('message', {
+        messages.push({
+            type: 'info',
+            text: 'Election ongoing NO FUNTIONALITY FOR EC'
+        })
+    }
+    // check if user is EC
+    if (auth.isEc(req, res)) {
+        console.log('user is EC')
+        res.render('./ec/home', {
             title: 'Express',
             session: req.session,
             election: election,
-            messages: [
-                {
-                    type: 'info',
-                    text: 'Election ongoing NO FUNTIONALITY FOR EC'
-                }
-            ]
-        });
+            messages: messages
+        })
+        messages = []
     }
     else {
-        // check if user is EC
-        if (auth.isEc(req, res)) {
-            console.log('user is EC')
-            res.render('./ec/home', {
-                title: 'Express',
-                session: req.session,
-                election: election
-            })
-        }
-        else {
-            res.redirect('../')
-        }
+        res.redirect('../')
     }
-})
-
-router.post('/', (req, res, next) => {
-    console.log('POST EC')
 })
 
 router.get('/add_candidate', async (req, res, next) => {
@@ -59,9 +49,24 @@ router.get('/add_candidate', async (req, res, next) => {
         var posts = []
         if (rollno !== undefined) {
             voter = await utils.getVoter(rollno);
-            posts = await utils.getPosts()
             if (voter.length > 0) {
-                voter = voter[0]
+                if (await utils.isVoterCandidate(rollno)) {
+                    messages.push({
+                        type: 'info',
+                        text: 'Voter already a Candidate'
+                    })
+                }
+                else {
+                    posts = await utils.getPosts()
+                    voter = voter[0]
+                }
+            }
+            else {
+                messages.push({
+                    type: 'info',
+                    text: 'Voter rollno invalid'
+                })
+                rollno = undefined
             }
         }
         res.render('./ec/add_candidate', {
@@ -71,8 +76,9 @@ router.get('/add_candidate', async (req, res, next) => {
             rollno: rollno,
             voter: voter,
             posts: posts,
+            messages: messages
         })
-        delete req.session.message
+        messages = []
     }
     else {
         res.redirect('../')
@@ -99,21 +105,15 @@ router.post('/add_candidate', async function (req, res) {
             });
         }
         else {
+            rollno = req.body.rollno
             if (await utils.isVoterCandidate(rollno)) {
-                res.render('message', {
-                    title: 'Express',
-                    session: req.session,
-                    election: election,
-                    messages: [
-                        {
-                            type: 'info',
-                            text: 'Voter already a Candidate'
-                        }
-                    ]
-                });
+                messages.push({
+                    type: 'info',
+                    text: 'Voter already a Candidate'
+                })
+                res.redirect('add_candidate')
             }
             else {
-                rollno = req.body.rollno
                 const uploadFolder = path.join(__dirname, "..", "..", "public", "images", "candidates");
                 const fileName = String(rollno) + ".png";
                 //tried uploading pic not working properly
@@ -126,7 +126,7 @@ router.post('/add_candidate', async function (req, res) {
                 postId = req.body.postId
                 manifesto = req.body.manifesto
                 try {
-                    await utils.addCandidate(rollno, postId, manifesto, "images\\\\candidates\\\\"+ fileName)
+                    await utils.addCandidate(rollno, postId, manifesto, "images\\\\candidates\\\\" + fileName)
                 }
                 catch (err) {
                     console.log(err)
@@ -135,7 +135,6 @@ router.post('/add_candidate', async function (req, res) {
 
 
         }
-
     }
 
     else {

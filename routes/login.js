@@ -53,6 +53,7 @@ router.post('/', function (request, response, next) {
                     if (result[0].Password === user_password) {
                         request.session.user_name = result[0].Rollno;
                         request.session.user_type = user_type;
+                        response.h
 
                         response.redirect("/");
                     }

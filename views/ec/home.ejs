@@ -33,6 +33,15 @@
     <main>
         <div class="center">
             <h2>EC Home</h2>
+            <p><%=JSON.stringify(session) %></p>
+            <p>
+                <% if(messages) { %> 
+                    <script>
+                        var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
+                    </script>
+                    <%= JSON.stringify(messages) %> 
+                    <% } %> 
+            </p>
         </div>
         <div class="center">
             <a href="ec/add_candidate">
