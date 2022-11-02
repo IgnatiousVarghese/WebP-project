@@ -4,7 +4,6 @@ var router = express.Router();
 router.get('/', function (request, response, next) {
 
     request.session.destroy();
-
     response.redirect("/");
 
 });
