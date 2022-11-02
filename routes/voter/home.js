@@ -10,24 +10,32 @@ var messages = []
 /* GET home page. */
 router.get('/', async function (req, res, next) {
     console.log("rendering voter home")
-    var election = await utils.getElectionDetails();
-    var posts = await utils.getPosts();
-    var postId = req.query.postId;
-    console.log('postId: ' + postId)
 
-    if (election.isElectionNotStarted) {
-        console.log("Election Not Sarted")
-        messages.push({
-            type: "info",
-            text: "election NOT started"
-        })
-    }
-    else if(postId !== undefined) {
-        userData = auth.getUserData(req, res);
-        console.log('user data - ', userData);
+    // check if user is voter
+    if (auth.isVoter(req, res)) {
+        var election = await utils.getElectionDetails();
+        var posts = await utils.getPosts();
+        var postId = req.query.postId;
+        console.log('postId: ' + postId)
 
-        // check if user is voter
-        if (auth.isVoter(req, res)) {
+        if (election.isElectionNotStarted) {
+            console.log("Election Not Sarted")
+            messages.push({
+                type: "info",
+                text: "election NOT started"
+            })
+        }
+        else if (election.isElectionOver) {
+            console.log("Election Over")
+            messages.push({
+                type: "info",
+                text: "election OVER"
+            })
+        }
+        else if (postId !== undefined) {
+            userData = auth.getUserData(req, res);
+            console.log('user data - ', userData);
+
             var post = undefined;
             var candidates = [];
             for (var i = 0; i < posts.length; i++) {
@@ -76,19 +84,18 @@ router.get('/', async function (req, res, next) {
             messages = []
             return;
         }
-        else {
-            res.redirect('../')
-            return;
-        }
+        res.render('./voter/home', {
+            title: 'Express',
+            session: req.session,
+            election: election,
+            posts: posts,
+            messages: messages,
+        });
+        messages = []
     }
-    res.render('./voter/home', {
-        title: 'Express',
-        session: req.session,
-        election: election,
-        posts: posts,
-        messages: messages,
-    });
-    messages = []
+    else{
+        res.redirect('../')
+    }
 })
 
 router.post('/', (req, res, next) => {
@@ -101,57 +108,56 @@ router.post('/vote', async function (req, res, next) {
     console.log(req.body)
     var election = await utils.getElectionDetails();
 
-    if (election.isElectionOngoing === false) {
-        messages.push({            
-            type: "info",
-            text: "Election NOT OPEN",
-        })
+    if (auth.isVoter(req, res) === false) {
+        res.redirect('/')
+        return;
     }
-    else if (auth.isVoter(req, res) === false)
-    {        
-        messages.push({            
-            type: "info",
-            text: "You are not a voter",
-        })
-    }
-    else if(req.body.postId === undefined || req.body.candidateId === undefined) {
-        messages.push({            
-            type: "info",
-            text: "Incomplete post request for vote",
-        })
-    }
-
     else {
-        const postId = req.body.postId
-        const candidateRollno = req.body.candidateId
-        const voterRollno = auth.getUserData(req, res)['user_name']
-
-        console.log(candidateRollno, postId, voterRollno)
-
-        if (await utils.notVoted(voterRollno, postId)) {
-            console.log("not voted")
-            try {
-                var result = await utils.Vote(voterRollno, postId, candidateRollno)
-                console.log(result)
-            }
-            catch (err) {
-                messages.push({
-                    type: 'error',
-                    text: err.message,
-                })
-            }
-            res.redirect('/voter/?postId=' + postId)
-            return;
-        }
-        else {
-            console.log("ALREADY voted")
-            messages.push({                
-                type: "error",
-                text: "Already VOTED"
+        if (election.isElectionOngoing === false) {
+            messages.push({
+                type: "info",
+                text: "Election NOT OPEN",
             })
         }
+        else if (req.body.postId === undefined || req.body.candidateId === undefined) {
+            messages.push({
+                type: "info",
+                text: "Incomplete post request for vote",
+            })
+        }
+
+        else {
+            const postId = req.body.postId
+            const candidateRollno = req.body.candidateId
+            const voterRollno = auth.getUserData(req, res)['user_name']
+
+            console.log(candidateRollno, postId, voterRollno)
+
+            if (await utils.notVoted(voterRollno, postId)) {
+                console.log("not voted")
+                try {
+                    var result = await utils.Vote(voterRollno, postId, candidateRollno)
+                    console.log(result)
+                }
+                catch (err) {
+                    messages.push({
+                        type: 'error',
+                        text: err.message,
+                    })
+                }
+                res.redirect('/voter/?postId=' + postId)
+                return;
+            }
+            else {
+                console.log("ALREADY voted")
+                messages.push({
+                    type: "error",
+                    text: "Already VOTED"
+                })
+            }
+        }
+        res.redirect('/voter')
     }
-    res.redirect('/voter')
 })
 
 module.exports = router;
