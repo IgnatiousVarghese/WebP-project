@@ -77,7 +77,7 @@
         </div>
     </main>
     <script>
-        <% if(voter === undefined) { %>
+        <% if(voter === undefined || rollno === undefined) { %>
             document.getElementById('add_candidate_form').remove()
         <% } else { %>
             rollno = JSON.parse('<%- JSON.stringify(rollno) %>');

@@ -5,6 +5,7 @@ var utils = require('../utils');
 
 var database = require('../database');
 var user_data
+var messages = []
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
@@ -18,8 +19,10 @@ router.get('/', async function (req, res, next) {
         res.render('index', {
             title: 'Express', 
             session: req.session, 
-            election: election
+            election: election,
+            messages: messages,
         });
+        messages = [];
     }
     else if (user_data['user_type'] === 'Voter') {
         res.redirect('/voter')

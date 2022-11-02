@@ -3,6 +3,7 @@ var router = express.Router();
 
 var database = require('../database');
 var auth = require('../auth');
+var messages = []
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -10,7 +11,12 @@ router.get('/', function (req, res, next) {
         res.redirect('../')
     }
     else {
-        res.render('login', { title: 'Express', session: req.session });
+        res.render('login', {
+            title: 'Express',
+            session: req.session,
+            messages: messages,
+        });
+        messages = [];
     }
 });
 
