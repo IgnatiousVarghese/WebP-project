@@ -18,12 +18,32 @@ router.get('/', async function (req, res, next) {
     userData = auth.getUserData(req, res);
     console.log('user data - ', userData);
 
-    // check if election ongoing
-    if (election.isElectionOngoing) {
+    // check election status 
+    if (election.isElectionNotStarted) {
+        messages.push({
+            type: 'info',
+            text: 'Election NOT started yet. Please add/remove candidates'
+        })
+    }
+    else if (election.isElectionOngoing) {
         messages.push({
             type: 'info',
             text: 'Election ongoing NO FUNTIONALITY FOR EC'
         })
+    }
+    else {
+        if (election.complete) {
+            messages.push({
+                type: 'info',
+                text: 'Election OVER, Results also published'
+            })
+        }
+        else {
+            messages.push({
+                type: 'info',
+                text: 'Election OVER, can publish results anytime'
+            })
+        }
     }
     // check if user is EC
     if (auth.isEc(req, res)) {
@@ -227,6 +247,37 @@ router.post('/remove_candidate', async function (req, res) {
     else {
         res.redirect('../')
     }
+})
+
+router.get('/publish_result', async function (req, res) {
+    console.log('Publishing result')
+    var election = await utils.getElectionDetails();
+    if (election.isElectionOver && auth.isEc(req, res)) {
+        try {
+            var result = await utils.getElectionResult()
+            messages.push({
+                type: 'success',
+                text: 'Election result was successfully calculated'
+            })
+            await utils.setElectionStatusAsComplete()
+            messages.push({
+                type: 'success',
+                text: 'Election Status set as Complete'
+            })
+        } catch (error) {
+            messages.push({
+                type: 'error',
+                text: error.message
+            })
+        }
+    }
+    if (!election.isElectionOver) {
+        messages.push({
+            type: 'waring',
+            text: 'Can publish result only if the election is over'
+        })
+    }
+    res.redirect('/')
 })
 
 module.exports = router;

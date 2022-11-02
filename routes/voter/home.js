@@ -138,6 +138,10 @@ router.post('/vote', async function (req, res, next) {
                 try {
                     var result = await utils.Vote(voterRollno, postId, candidateRollno)
                     console.log(result)
+                    messages.push({
+                        type: 'success',
+                        text: 'Vote done successfully',
+                    })
                 }
                 catch (err) {
                     messages.push({
@@ -145,7 +149,7 @@ router.post('/vote', async function (req, res, next) {
                         text: err.message,
                     })
                 }
-                res.redirect('/voter/?postId=' + postId)
+                res.redirect('/voter')
                 return;
             }
             else {

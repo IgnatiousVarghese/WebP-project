@@ -17,8 +17,8 @@ router.get('/', async function (req, res, next) {
     console.log(user_data);
     if (user_data === null) {
         res.render('index', {
-            title: 'Express', 
-            session: req.session, 
+            title: 'Express',
+            session: req.session,
             election: election,
             messages: messages,
         });
@@ -34,22 +34,48 @@ router.get('/', async function (req, res, next) {
         res.redirect('/logout');
 });
 
-router.post('/test', (req, res, next) => {
+/* GET Result page */
+router.get('/result', async function (req, res, next) {
+    console.log("rendering result")
+
+    var election = await utils.getElectionDetails();
     
+    if (auth.isLoggedIn(req, res) && election.complete) {
+        var result = await utils.getElectionResult()
+        res.render('result', {
+            title: 'Express',
+            session: req.session,
+            election: election,
+            result: result,
+            messages: messages,
+        })
+    }
+    else {
+        messages.push({
+            type: 'error',
+            text: 'You need to be logged in to view results'
+        })
+        res.redirect('/')
+    }
+
+});
+
+router.post('/test', (req, res, next) => {
+
     const form = new formidable.IncomingForm();
-    form.parse(req, function(err, fields, files){
+    form.parse(req, function (err, fields, files) {
         console.log(files)
-  
+
         var oldPath = files.profilePic.path;
         var newPath = path.join(__dirname, 'uploads')
-                + '/'+files.profilePic.name
+            + '/' + files.profilePic.name
         var rawData = fs.readFileSync(oldPath)
-      
-        fs.writeFile(newPath, rawData, function(err){
-            if(err) console.log(err)
+
+        fs.writeFile(newPath, rawData, function (err) {
+            if (err) console.log(err)
             return res.send("Successfully uploaded")
         })
-  })
+    })
 });
 
 module.exports = router;

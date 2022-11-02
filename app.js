@@ -44,6 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes 
 
 app.use('/', indexRouter);
+app.use('/result', indexRouter);
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 app.use('/users', usersRouter);

@@ -20,6 +20,7 @@ module.exports = {
         var Start_time = new Date(result.Start_time)
         var End_time = new Date(result.End_time)
         var time_now = new Date()
+        var complete = Boolean(result.Votes_counted)
 
         var isElectionOngoing = time_now > Start_time && time_now < End_time
         var isElectionNotStarted = time_now < Start_time && time_now < End_time
@@ -30,11 +31,12 @@ module.exports = {
             Election_id: result.Election_id,
             Start_time: Start_time,
             End_time: End_time,
-            Votes_counted: result.Votes_counted,
+            complete: complete,
             isElectionOngoing: isElectionOngoing,
             isElectionNotStarted: isElectionNotStarted,
             isElectionOver: isElectionOver,
         }
+        console.log(electionDetails)
         return electionDetails;
     },
 
@@ -115,12 +117,17 @@ module.exports = {
         return JSON.parse(JSON.stringify(result))
     },
 
-    isFileValid: (file) => {
-        const type = file.type.split("/").pop();
-        const validTypes = ["jpg", "jpeg", "png"];
-        if (validTypes.indexOf(type) === -1) {
-            return false;
-        }
-        return true;
+    getElectionResult: async function () {
+        var query = `select count(voter_id) as vote_count, candidate_id, post_id, name as post_name 
+                    from (vote inner join post p on p.id = vote.post_id	)
+                    group by candidate_id;`
+        var result = await excequteAsyncQuery(query)
+        return JSON.parse(JSON.stringify(result))
+    },
+
+    setElectionStatusAsComplete: async function () {
+        var query = `update election set votes_counted = 1 where election_id = 1;`
+        var result = await excequteAsyncQuery(query)
+        return JSON.parse(JSON.stringify(result))
     },
 }

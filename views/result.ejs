@@ -6,37 +6,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMS-Home</title>
-    <link rel="stylesheet" href="stylesheets/style.css">
+    <link rel="stylesheet" href="//localhost:3000/stylesheets/style.css">
 </head>
 
 <body class="flex">
     <header>
         <nav>
             <div id="logo">
-                <img src="images/nitc.png" alt="">
+                <img src="//localhost:3000/images/nitc.png" alt="">
             </div>
             <ul>
                 <li><a href="/">Home</a></li>
                 <% if(session.user_type) { %>
-                <li>
-                    <a href="/logout" class="btn btn-primary">Logout</a>
-                </li>
+                    <li>
+                        <a href="/logout" class="btn btn-primary">Logout</a>
+                    </li>
 
 
-                <% } else { %>
-                    <li><a href="/login">Log in</a></li>
-                <% } %>
+                    <% } else { %>
+                        <li><a href="/login">Log in</a></li>
+                        <% } %>
             </ul>
         </nav>
         <h1 id="head">Election Management System</h1>
     </header>
     <main>
         <div class="center">
-            <h2>Election starts on 
-                <%= election.Start_time.toLocaleString()  %> 
-                and ends on 
-                <%= election.End_time.toLocaleString()  %> 
-            </h2>
+            <h2>Election Results</h2>
+            <p><%=JSON.stringify(session) %></p>
             <p>
                 <% if(messages) { %> 
                     <script>
@@ -46,6 +43,10 @@
                     <%= JSON.stringify(election) %> 
                     <% } %> 
             </p>
+        </div>
+        <div class="center">
+            
+            <%= JSON.stringify(result) %> 
         </div>
     </main>
 </body>
