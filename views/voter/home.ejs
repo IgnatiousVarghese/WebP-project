@@ -32,7 +32,17 @@
     </header>
     <main>
         <div class="center">
-            <h3 style="font-size: 2rem">Choose the post you wish to vote for!</h3>
+            <% if (election&&election.isElectionOver) { %>
+                <h3>Election is Over. Results will be published soon.</h3>
+            <% } else if (election&&election.complete) { %>
+                <a href="./result">View Results</a>
+            <% } else if (election && election.isElectionNotStarted) { %>
+                <h3>Election will start on <%= election.Start_time.toLocaleString("en-US",{ year: 'numeric', month: 'long', day: 'numeric' }) %> </h3>
+            <% } else { %>
+                <h3 style="font-size: 2rem">Choose the post you wish to vote for!</h3>
+            <% } %>
+             
+                 
             <p>
                 <% if(messages) { %>
                     <script>
@@ -42,6 +52,7 @@
                             <% } %>
             </p>
         </div>
+        <% if (election&&election.isElectionOngoing) { %>
         <div style="text-align: center; margin-top:20px">
             <form action="/voter" method="post">
                 <select name="post" id="post">
@@ -56,6 +67,7 @@
                 <button type="submit">submit</button>
             </form>
         </div>
+        <% } %>
     </main>
 </body>
 

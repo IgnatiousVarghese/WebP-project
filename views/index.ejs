@@ -33,9 +33,9 @@
     <main>
         <div class="center">
             <h2>Election starts on 
-                <%= election.Start_time.toLocaleString()  %> 
+                <%= election.Start_time.toLocaleString("en-US",{ year: 'numeric', month: 'long', day: 'numeric' })  %> 
                 and ends on 
-                <%= election.End_time.toLocaleString()  %> 
+                <%= election.End_time.toLocaleString("en-US",{ year: 'numeric', month: 'long', day: 'numeric' })  %> 
             </h2>
             <p>
                 <% if(messages) { %> 

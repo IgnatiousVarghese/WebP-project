@@ -7,6 +7,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMS-Home</title>
     <link rel="stylesheet" href="//localhost:3000/stylesheets/style.css">
+    <script>
+        function showSnackbar() {
+    var snackBar = 
+      document.getElementById("snackbar")
+    // Dynamically Appending class
+    // to HTML element 
+    snackBar.className = "show-bar";
+  
+    setTimeout(function () {
+       // Dynamically Removing the Class 
+       // from HTML element
+       // By Replacing it with an Empty
+       // String after 5 seconds
+       snackBar.className = 
+          snackBar.className.replace("show-bar", ""); 
+    }, 5000);
+}
+    </script>
 </head>
 
 <body class="flex">
@@ -31,21 +49,39 @@
         <h1 id="head">Election Management System</h1>
     </header>
     <main>
-        <div class="center">
+        <div class="center" style="margin: 10px;">
             <h2>Election Results</h2>
-            <p><%=JSON.stringify(session) %></p>
+        </div>
+        <div class="center">
+            <!-- <p><%=JSON.stringify(session) %></p> -->
             <p>
                 <% if(messages) { %> 
-                    <script>
-                        var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
-                    </script>
                     <%= JSON.stringify(messages) %> 
-                    <%= JSON.stringify(election) %> 
                     <% } %> 
             </p>
         </div>
+        <% 
+            const x = [...new Set(result.map(item => item.post_id))]
+             %> 
         <div class="center">
-            
+            <% for (const item of x) {%>
+                <div class="container2">
+                    <div class="center" style="margin: 10px">
+
+                    </div>
+                    <% let  cans    =   result.filter(item1 => item1.post_id  ===   item )%> 
+                    <h4><%=cans[0].post_name%></h4>
+                    <%for (const item2 of cans){    %>
+                        <div class="container2" style="margin:20px">
+                            <div><%= item2.vote_count%></div>
+                            <div><%= item2.candidate_id%></div>
+                        </div>
+                   <% }%>  
+                </div>
+            <%}
+            %> 
+        </div>
+        <div class="center">
             <%= JSON.stringify(result) %> 
         </div>
     </main>

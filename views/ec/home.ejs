@@ -29,63 +29,75 @@
             </ul>
         </nav>
         <h1 id="head">Election Management System</h1>
+        <!-- <div class="center" style="margin:10px">
+            <h2>EC Home</h2>
+        </div> -->
     </header>
     <main>
         <div class="center">
-            <h2>EC Home</h2>
-            <p><%=JSON.stringify(session) %></p>
+            <!-- <p><%=JSON.stringify(session) %></p> -->
             <p>
                 <% if(messages) { %> 
                     <script>
                         var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
                     </script>
-                    <%= JSON.stringify(messages) %> 
+                    <%= messages[0].text %> 
                     <%= JSON.stringify(election) %> 
                     <% } %> 
             </p>
+            <% if(election&&election.isElectionOngoing) { %>
+            <div>Election will end on <%= election.End_time.toLocaleString("en-US",{ year: 'numeric', month: 'long', day: 'numeric' }) %></div>
+            <% } %>
         </div>
+        <% if(!(election&&election.isElectionOngoing)) { %>
         <div class="center">
-            <a href="ec/add_candidate">
-                <div class="container2" type="button">
-                    <div class="title">
-                        ADD Candidate
-                    </div>  
-                    <div class="desc">
-                        fdv f
+            <% if (election&&election.isElectionNotStarted) { %>
+                <a href="ec/add_candidate">
+                    <div class="container2" type="button">
+                        <div class="title">
+                            ADD Candidate
+                        </div>  
+                        <div class="desc">
+                            fdv f
+                        </div>
                     </div>
-                </div>
-            </a>
-            <a href="ec/remove_candidate">
-                <div class="container2">
-                    <div class="title">
-                        REMOVE Candidate
+                </a>
+                <a href="ec/remove_candidate">
+                    <div class="container2">
+                        <div class="title">
+                            REMOVE Candidate
+                        </div>
+                        <div class="desc">
+                            fdv f
+                        </div>
                     </div>
-                    <div class="desc">
-                        fdv f
+                </a>
+            <% } else if (election&&election.complete) { %>
+                <a href="result">
+                    <div class="container2">
+                        <div class="title">
+                            VIEW results
+                        </div>
+                        <div class="desc">
+                            fdv f
+                        </div>
                     </div>
-                </div>
-            </a>
-            <a href="ec/publish_result">
-                <div class="container2">
-                    <div class="title">
-                        PUBLISH results
+                </a>
+            <% } else if (election&&election.isElectionOver) { %>
+                <a href="ec/publish_result">
+                    <div class="container2">
+                        <div class="title">
+                            PUBLISH results
+                        </div>
+                        <div class="desc">
+                            fdv f
+                        </div>
                     </div>
-                    <div class="desc">
-                        fdv f
-                    </div>
-                </div>
-            </a>
-            <a href="result">
-                <div class="container2">
-                    <div class="title">
-                        VIEW results
-                    </div>
-                    <div class="desc">
-                        fdv f
-                    </div>
-                </div>
-            </a>
+                </a>
+            <% } %> 
+            
         </div>
+        <% } %>
     </main>
 </body>
 
