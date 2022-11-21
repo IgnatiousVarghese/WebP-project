@@ -16,7 +16,7 @@
 <body>
 
     <div class="container">
-        <h1 class="mt-5 mb-5 text-center text-primary"><b>Login System in Node.js Express</b></h1>
+        <h1 class="mt-5 mb-5 text-center text-primary"><b>Login</b></h1>
 
         <div class="row mt-5">
             <div class="col-md-3">&nbsp;</div>
@@ -62,6 +62,14 @@
             </div>
         </div>
     </div>
+    <script>
+        var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
+        console.log(msgs)
+        console.log('messages above');
+        msgs.forEach(element => {
+            window.alert(element.text)
+        });
+    </script>
 </body>
 
 </html>

@@ -33,34 +33,36 @@
     <main>
         <div class="center">
             <h2>EC REMOVE Candidate</h2>
-            <p>
-                <%=JSON.stringify(session) %>
-            </p>
-            <p>
                 <% if(messages) { %>
                     <script>
                         var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
                     </script>
-                    <%= JSON.stringify(messages) %>
-                        <%= JSON.stringify(candidate) %>
                             <% } %>
-            </p>
         </div>
-        <div class="center">
-            <form id="form" action="/ec/remove_candidate" method="get">
-                <input type="text" name="Rollno" id="Rollno" value="<%=rollno%>">
-                <button type="submit">Check</button>
-            </form>
-
+        <div class="center" style="margin:20px">
+            <div class="container center"   style="margin:0; padding:10px;width: unset;">
+                <form id="form" action="/ec/remove_candidate" method="get">
+                    <input type="text" name="Rollno" id="Rollno" value="<%=rollno%>">
+                    <button type="submit">Check</button>
+                </form>
+            </div>
+        </div>
+        <div class="center" style="margin: 40px;"  id="hide-form">
+            <div class="container center"   style="margin:0; padding:10px;width: unset;">
             <form id="remove_candidate_form" action="/ec/remove_candidate" method="post">
-                <label for="rollnopost">Rollno</label>
-                <input type="text" name="rollno" id="rollno">
+                <div class="formfield">
+                    <label for="rollnopost">Rollno</label>
+                    <input type="text" name="rollno" id="rollno">
+                </div>
 
-                <label for="name">Name</label>
-                <input type="text" name="name" id="name">
+                <div class="formfield">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name">
+                </div>
 
                 <button type="submit">Remove</button>
             </form>
+        </div>
         </div>
     </main>
     <script>
@@ -78,8 +80,17 @@
             document.getElementById('name').value = candidate[0].Name
         }
         else {
+            document.getElementById('hide-form').style.display = 'none'
             document.getElementById('remove_candidate_form').remove()
         }
+    </script>
+    <script>
+        var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
+        console.log(msgs)
+        console.log('messages above');
+        msgs.forEach(element => {
+            window.alert(element.text)
+        });
     </script>
 </body>
 

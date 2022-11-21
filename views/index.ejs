@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMS-Home</title>
     <link rel="stylesheet" href="stylesheets/style.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="javascripts/myscript.js"></script>
 </head>
 
 <body class="flex">
@@ -37,15 +39,18 @@
                 and ends on 
                 <%= election.End_time.toLocaleString("en-US",{ year: 'numeric', month: 'long', day: 'numeric' })  %> 
             </h2>
-            <p>
+
                 <% if(messages) { %> 
                     <script>
                         var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
+                        console.log(msgs)
+                        console.log('messages above');
+                        msgs.forEach(element => {
+                            window.alert(element.text)
+                        });
                     </script>
-                    <%= JSON.stringify(messages) %> 
-                    <%= JSON.stringify(election) %> 
                     <% } %> 
-            </p>
+
         </div>
     </main>
 </body>

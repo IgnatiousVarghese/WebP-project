@@ -9,12 +9,12 @@ var messages = []
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
-    console.log("rendering index")
+    // console.log("rendering index")
 
     var election = await utils.getElectionDetails();
 
     user_data = auth.getUserData(req, res);
-    console.log(user_data);
+    // console.log(user_data);
     if (user_data === null) {
         res.render('index', {
             title: 'Express',

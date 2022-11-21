@@ -33,52 +33,61 @@
     <main>
         <div class="center">
             <h2>EC ADD Candidate</h2>
-            <p><%=JSON.stringify(session) %></p>
-            <p>
-                <% if(messages) { %> 
-                    <script>
-                        var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
-                    </script>
-                    <%= JSON.stringify(messages) %> 
-                    <% } %> 
-            </p>
         </div>
-        <div class="center">
-            <form action="/ec/add_candidate" method="get">
-                <input type="text" name="Rollno" id="Rollno" value="<%=rollno%>">
-                <button type="submit">Check</button>
-            </form>
-
-            <form id="add_candidate_form" action="/ec/add_candidate" method="post">
-                <label for="rollnopost">Rollno</label>
-                <input type="text" name="rollno" id="rollnopost">
-
-                <label for="name">Name</label>
-                <input type="text" name="name" id="name">
-
-                <label for="manifesto">Manifesto</label>
-                <input type="text" name="manifesto" id="manifesto">
-
-                <label for="posts">posts</label>
-                <select name="postId" id="posts">
-                    <!--
-                        make options using javascript
-                    -->
-                    <option value="1" id = "">Cul affairs sec</option>
-                    <option value="2" id = "">Gen sec</option>
-                    <option value="3" id = "">sports sec</option>
-                </select>
-
-                <label for="photo">Photo</label>
-                <input type="file" name="photo" id="photo">
-
-                <button type="submit">Submit</button>
-            </form>
+        <div class="center" style="margin:20px">
+            <div class="container center"   style="margin:0; padding:10px;width: unset;">
+                <form action="/ec/add_candidate" method="get" >
+                    <input type="text" name="Rollno" id="Rollno" value="<%=rollno%>">
+                    <button type="submit">Check</button>
+                </form>
+            </div>
         </div>
-    </main>
+        <div class="center" style="margin: 40px;"  id="hide-form">
+            <div class="container center"   style="margin:0; padding:10px;width: unset;">
+
+                <form id="add_candidate_form" action="/ec/add_candidate" method="post">
+                    <div class="formfield">
+                        
+                        <label for="rollnopost">Rollno</label>
+                        <input type="text" name="rollno" id="rollnopost">
+                    </div>
+                    <div class="formfield">
+                        
+                        <label for="name">Name</label>
+                        <input type="text" name="name" id="name">
+                    </div>
+                    <div class="formfield">
+                        
+                        <label for="manifesto">Manifesto</label>
+                        <input type="text" name="manifesto" id="manifesto">
+                    </div>
+                    <div class="formfield">
+                        
+                        <label for="posts">Post</label>
+                        <select name="postId" id="posts">
+                            <!--
+                                make options using javascript
+                            -->
+                            <option value="1" id = "">Cul affairs sec</option>
+                            <option value="2" id = "">Gen sec</option>
+                            <option value="3" id = "">sports sec</option>
+                        </select>
+                    </div>
+                    <div class="formfield"  id="photo">
+                        
+                        <label for="photo">Photo</label>
+                        <input type="file" name="photo" id="photo">
+                    </div>
+                    
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            </div>
+        </main>
     <script>
         <% if(voter === undefined || rollno === undefined) { %>
             document.getElementById('add_candidate_form').remove()
+            document.getElementById('hide-form').style.display = 'none'
         <% } else { %>
             rollno = JSON.parse('<%- JSON.stringify(rollno) %>');
             voter = JSON.parse('<%- JSON.stringify(voter) %>');
@@ -86,6 +95,14 @@
             document.getElementById('rollnopost').value = voter.Rollno
             document.getElementById('name').value = voter.Name
         <%}%>
+    </script>
+    <script>
+        var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
+        console.log(msgs)
+        console.log('messages above');
+        msgs.forEach(element => {
+            window.alert(element.text)
+        });
     </script>
 </body>
 

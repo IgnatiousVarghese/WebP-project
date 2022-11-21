@@ -12,11 +12,11 @@ var messages = []
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
-    console.log("rendering EC home")
+    // console.log("rendering EC home")
     var election = await utils.getElectionDetails();
 
     userData = auth.getUserData(req, res);
-    console.log('user data - ', userData);
+    // console.log('user data - ', userData);
 
     // check election status 
     if (election.isElectionNotStarted) {
@@ -47,7 +47,7 @@ router.get('/', async function (req, res, next) {
     }
     // check if user is EC
     if (auth.isEc(req, res)) {
-        console.log('user is EC')
+        // console.log('user is EC')
         res.render('./ec/home', {
             title: 'Express',
             session: req.session,

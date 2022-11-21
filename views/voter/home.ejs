@@ -32,25 +32,29 @@
     </header>
     <main>
         <div class="center">
-            <% if (election&&election.isElectionOver) { %>
+            <% if (election&&election.complete) { %>
+                <a href="./result">
+                    <div class="container2">
+                        <div class="title">
+                            View Results
+                        </div>
+                        <div class="desc">
+                            Click here to view results
+                        </div>
+                    </div>
+                </a>
+            <% } else if (election&&election.isElectionOver) { %>
                 <h3>Election is Over. Results will be published soon.</h3>
-            <% } else if (election&&election.complete) { %>
-                <a href="./result">View Results</a>
             <% } else if (election && election.isElectionNotStarted) { %>
                 <h3>Election will start on <%= election.Start_time.toLocaleString("en-US",{ year: 'numeric', month: 'long', day: 'numeric' }) %> </h3>
             <% } else { %>
                 <h3 style="font-size: 2rem">Choose the post you wish to vote for!</h3>
             <% } %>
-             
-                 
-            <p>
                 <% if(messages) { %>
                     <script>
                         var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
                     </script>
-                    <%= JSON.stringify(messages) %>
                             <% } %>
-            </p>
         </div>
         <% if (election&&election.isElectionOngoing) { %>
         <div style="text-align: center; margin-top:20px">
@@ -68,6 +72,14 @@
             </form>
         </div>
         <% } %>
+        <script>
+        var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
+        console.log(msgs)
+        console.log('messages above');
+        msgs.forEach(element => {
+            window.alert(element.text)
+        });
+    </script>
     </main>
 </body>
 

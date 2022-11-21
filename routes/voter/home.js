@@ -25,6 +25,12 @@ router.get('/', async function (req, res, next) {
                 text: "election NOT started"
             })
         }
+        else if (election.complete) {
+            messages.push({
+                type: "info",
+                text: "Results published"
+            })
+        }
         else if (election.isElectionOver) {
             console.log("Election Over")
             messages.push({

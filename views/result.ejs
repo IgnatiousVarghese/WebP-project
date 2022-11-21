@@ -7,24 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMS-Home</title>
     <link rel="stylesheet" href="//localhost:3000/stylesheets/style.css">
-    <script>
-        function showSnackbar() {
-    var snackBar = 
-      document.getElementById("snackbar")
-    // Dynamically Appending class
-    // to HTML element 
-    snackBar.className = "show-bar";
-  
-    setTimeout(function () {
-       // Dynamically Removing the Class 
-       // from HTML element
-       // By Replacing it with an Empty
-       // String after 5 seconds
-       snackBar.className = 
-          snackBar.className.replace("show-bar", ""); 
-    }, 5000);
-}
-    </script>
 </head>
 
 <body class="flex">
@@ -52,14 +34,13 @@
         <div class="center" style="margin: 10px;">
             <h2>Election Results</h2>
         </div>
-        <div class="center">
-            <!-- <p><%=JSON.stringify(session) %></p> -->
+        <!-- <div class="center">
             <p>
                 <% if(messages) { %> 
                     <%= JSON.stringify(messages) %> 
                     <% } %> 
             </p>
-        </div>
+        </div> -->
         <% 
             const x = [...new Set(result.map(item => item.post_id))]
              %> 
@@ -73,16 +54,13 @@
                     <h4><%=cans[0].post_name%></h4>
                     <%for (const item2 of cans){    %>
                         <div class="container2" style="margin:20px">
-                            <div><%= item2.vote_count%></div>
-                            <div><%= item2.candidate_id%></div>
+                            <div>Vote Count:<%= item2.vote_count%></div>
+                            <div>Candidate Id:<%= item2.candidate_id%></div>
                         </div>
                    <% }%>  
                 </div>
             <%}
             %> 
-        </div>
-        <div class="center">
-            <%= JSON.stringify(result) %> 
         </div>
     </main>
 </body>

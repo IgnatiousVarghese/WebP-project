@@ -47,8 +47,18 @@ router.post('/', function (request, response, next) {
             `
         }
         else {
-            response.send('Invalid user type');
-            response.end();
+
+            messages.push({
+                type: 'error',
+                text: 'Invalid User type'
+            })
+            response.render('login', {
+                title: 'Express',
+                session: request.session,
+                messages: messages,
+            })
+            messages = [];
+            return;
         }
 
         database.query(query, function (error, data) {
@@ -59,12 +69,23 @@ router.post('/', function (request, response, next) {
                     if (result[0].Password === user_password) {
                         request.session.user_name = result[0].Rollno;
                         request.session.user_type = user_type;
-                        response.h
 
                         response.redirect("/");
                     }
-                    else
-                        response.send('Incorrect Password');
+                    else {
+
+                        messages.push({
+                            type: 'error',
+                            text: 'Incorrect password'
+                        })
+                        response.render('login', {
+                            title: 'Express',
+                            session: request.session,
+                            messages: messages,
+                        })
+                        messages = [];
+                        return;
+                    }
                 }
                 else {
                     if (result[0].Password === user_password) {
@@ -73,19 +94,51 @@ router.post('/', function (request, response, next) {
 
                         response.redirect("/");
                     }
-                    else
-                        response.send('Incorrect Password');
+                    else {
+
+                        messages.push({
+                            type: 'error',
+                            text: 'Incorrect password'
+                        })
+                        response.render('login', {
+                            title: 'Express',
+                            session: request.session,
+                            messages: messages,
+                        })
+                        messages = [];
+                        return;
+                    }
                 }
             }
-            else {
-                response.send('Username NOT IN DATABASE');
-            }
-            response.end();
+                else {
+
+                    messages.push({
+                        type: 'error',
+                        text: 'Username not in database'
+                    })
+                    response.render('login', {
+                        title: 'Express',
+                        session: request.session,
+                        messages: messages,
+                    })
+                    messages = [];
+                    return;
+                }
         });
     }
+    
     else {
-        response.send('Please Enter Email Address and Password Details');
-        response.end();
+        messages.push({
+            type: 'error',
+            text: 'Incomplete Form'
+        })
+        response.render('login', {
+            title: 'Express',
+            session: request.session,
+            messages: messages,
+        })
+        messages = [];
+        return;
     }
 
 });

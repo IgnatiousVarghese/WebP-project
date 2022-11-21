@@ -1,6 +1,6 @@
 module.exports = {
     isLoggedIn: function (req, res) {
-        console.log(req.session);
+        // console.log(req.session);
         if (req.session.user_type === undefined) {
             return false;
         }

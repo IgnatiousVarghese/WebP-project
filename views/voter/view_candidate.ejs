@@ -34,17 +34,9 @@
         <h2 class="center2">
             <%= post.Name %>
         </h2>
-        <h4 class="center2">
+        <h3 class="center2">
             <%= post.Desc %>
-            <p>
-                <% if(messages) { %>
-                    <script>
-                        var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
-                    </script>
-                    <%= JSON.stringify(messages) %>
-                            <% } %>
-            </p>
-        </h4>
+        </h3>
         <form action="/voter/vote" method="post">
             <div class="center">
 
@@ -77,7 +69,14 @@
             </div>
         </form>
 
-
+        <script>
+            var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
+            console.log(msgs)
+            console.log('messages above');
+            msgs.forEach(element => {
+                window.alert(element.text)
+            });
+        </script>
     </main>
 </body>
 

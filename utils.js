@@ -36,7 +36,7 @@ module.exports = {
             isElectionNotStarted: isElectionNotStarted,
             isElectionOver: isElectionOver,
         }
-        console.log(electionDetails)
+        // console.log(electionDetails)
         return electionDetails;
     },
 
@@ -120,7 +120,7 @@ module.exports = {
     getElectionResult: async function () {
         var query = `select count(voter_id) as vote_count, candidate_id, post_id, name as post_name 
                     from (vote inner join post p on p.id = vote.post_id	)
-                    group by candidate_id;`
+                    group by candidate_id order by vote_count desc;`
         var result = await excequteAsyncQuery(query)
         return JSON.parse(JSON.stringify(result))
     },

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EMS-Home</title>
     <link rel="stylesheet" href="//localhost:3000/stylesheets/style.css">
-</head>
+    </head>
 
 <body class="flex">
     <header>
@@ -35,16 +35,11 @@
     </header>
     <main>
         <div class="center">
-            <!-- <p><%=JSON.stringify(session) %></p> -->
-            <p>
                 <% if(messages) { %> 
                     <script>
                         var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
                     </script>
-                    <%= messages[0].text %> 
-                    <%= JSON.stringify(election) %> 
                     <% } %> 
-            </p>
             <% if(election&&election.isElectionOngoing) { %>
             <div>Election will end on <%= election.End_time.toLocaleString("en-US",{ year: 'numeric', month: 'long', day: 'numeric' }) %></div>
             <% } %>
@@ -58,7 +53,7 @@
                             ADD Candidate
                         </div>  
                         <div class="desc">
-                            fdv f
+                            Click to know more
                         </div>
                     </div>
                 </a>
@@ -68,21 +63,22 @@
                             REMOVE Candidate
                         </div>
                         <div class="desc">
-                            fdv f
+                            Click to know more
                         </div>
                     </div>
                 </a>
             <% } else if (election&&election.complete) { %>
-                <a href="result">
+                <h2>Election results published</h2>
+                <!-- <a href="result">
                     <div class="container2">
                         <div class="title">
                             VIEW results
                         </div>
                         <div class="desc">
-                            fdv f
+                            Click to know more
                         </div>
                     </div>
-                </a>
+                </a> -->
             <% } else if (election&&election.isElectionOver) { %>
                 <a href="ec/publish_result">
                     <div class="container2">
@@ -90,7 +86,7 @@
                             PUBLISH results
                         </div>
                         <div class="desc">
-                            fdv f
+                            Click to know more
                         </div>
                     </div>
                 </a>
@@ -99,6 +95,14 @@
         </div>
         <% } %>
     </main>
+    <script>
+        var msgs = JSON.parse('<%- JSON.stringify(messages) %>')
+        console.log(msgs)
+        console.log('messages above');
+        msgs.forEach(element => {
+            window.alert(element.text)
+        });
+    </script>
 </body>
 
 </html>
